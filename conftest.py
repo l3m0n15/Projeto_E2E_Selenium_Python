@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import pytest
-
+from page.login_page import fazer_login
 
 
 @pytest.fixture()
@@ -16,6 +16,6 @@ def driver():
     driver.quit()
 
 @pytest.fixture
-def usuario_logado(driver):
+def usuario_login(driver):
     fazer_login(driver)
     return driver
