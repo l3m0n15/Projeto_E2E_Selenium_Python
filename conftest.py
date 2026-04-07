@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import pytest
-from page.login_page import fazer_login
+from login_page import fazer_login
 
 
 @pytest.fixture()
@@ -17,5 +17,5 @@ def driver():
 
 @pytest.fixture
 def usuario_login(driver):
-    fazer_login(driver)
+    fazer_login(driver, "standard_user", "secret_sauce")
     return driver
