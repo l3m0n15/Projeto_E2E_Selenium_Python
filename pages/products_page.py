@@ -4,6 +4,18 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 
+
+
+def add_very_products(driver, name_productd):
+    wait = WebDriverWait(driver, 10)
+
+    located_very_products = wait.until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, f"//button[contains(@class,'btn btn_primary btn_small btn_inventory ' and text()= '{name_productd}']")))
+
+    located_very_products.click()
+
+
+
 def add_product(driver, name_product):
     wait = WebDriverWait(driver, 10)
 
@@ -15,13 +27,11 @@ def add_product(driver, name_product):
 
     button_add_cart.click()
 
+def checkout_cart(driver):
+    wait = WebDriverWait(driver, 10)
 
-
-    produtos = [
-        ('Sauce Labs Backpack'),
-        ('Sauce Labs Bike Light'),
-        ('Sauce Labs Bolt T-Shirt'),
-        ('Sauce Labs Fleece Jacket'),
-        ('Sauce Labs Onesie'),
-        ('Test.allTheThings() T-Shirt (Red)')
-    ]
+    located_checkout_cart = wait.until(
+        EC._element_if_visible((By.CSS_SELECTOR, "[data-test='shopping-cart-link']")))
+        
+    return located_checkout_cart.text
+    

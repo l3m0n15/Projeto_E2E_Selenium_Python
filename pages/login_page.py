@@ -19,9 +19,10 @@ def fazer_login(driver, username_text,password_text):
         EC.element_to_be_clickable((By.XPATH, "//input[@class='submit-button btn_action']" )))
     button_login.click()
 
-    return error_login.text
-
+    
 def error_login(driver):
     wait = WebDriverWait(driver, 10)
     error_login = wait.until(
         EC.visibility_of_element_located((By.CSS_SELECTOR, "[data-test='error']")))
+    
+    return error_login.text
