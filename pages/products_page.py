@@ -3,11 +3,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-def add_very_products(driver, name_product):
+def add_very_products(driver, name_products: list):
     wait = WebDriverWait(driver, 10)
 
-    located_very_products = wait.until(
-        EC.element_to_be_clickable((By.XPATH, f"//button[contains(@class,'btn btn_primary btn_small btn_inventory ' and text()= '{name_product}']")))
+    for name_product in name_products:
+        located_very_products = wait.until(
+            EC.element_to_be_clickable((By.XPATH, f"//a[contains(@data-test,'item-0-title-link')]//div[contains(@data-test,'inventory-item-name') and text()='{name_product}']")))
 
     located_very_products.click()
 
