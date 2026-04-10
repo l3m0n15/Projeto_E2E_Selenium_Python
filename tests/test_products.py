@@ -12,12 +12,14 @@ def test_add_very_products(usuario_login):
     'Sauce Labs Onesie',
     'Test.allTheThings() T-Shirt (Red)'
 ]
+    
+    add_very_products(usuario_login, produtos)
 
+    quantidade_very_products = checkout_cart(usuario_login)
 
+    assert quantidade_very_products == "6"
 
-
-@pytest.mark.parametrize("produtos", [
-        
+@pytest.mark.parametrize("products", [
 
         'Sauce Labs Backpack',
         'Sauce Labs Bike Light',
@@ -28,7 +30,8 @@ def test_add_very_products(usuario_login):
         'Test.allTheThings() T-Shirt (Red)'
     ])
 
-def test_add_product(driver):
-    checkout_cart(driver)
-
-    assert checkout_cart == "6"
+def test_add_product(usuario_login, products):
+    add_product(usuario_login, products)
+   
+    quantidade_product = checkout_cart(usuario_login, products)
+    assert quantidade_product == "1"

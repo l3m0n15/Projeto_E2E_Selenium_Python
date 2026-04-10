@@ -20,6 +20,8 @@ def fazer_login(driver, username_text,password_text):
     button_login.click()
 
     
+
+    
 def error_login(driver):
     wait = WebDriverWait(driver, 10)
     error_login = wait.until(
