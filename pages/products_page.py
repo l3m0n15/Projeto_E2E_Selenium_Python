@@ -2,43 +2,41 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-
-def add_very_products(driver, name_products: list):
-    wait = WebDriverWait(driver, 10)
-
+#Botão localizado por nome 
+def add_very_products(usuario_login, name_products: list):
+    wait = WebDriverWait(usuario_login, 10)
     for name_product in name_products:
         located_very_products = wait.until(
             EC.element_to_be_clickable((By.XPATH, f"//a[contains(@data-test,'item-0-title-link')]//div[contains(@data-test,'inventory-item-name') and text()='{name_product}']")))
-
+#clique no nome do produto
     located_very_products.click()
 
+#Botão adicionar ao carrinho
+def button_add(usuario_login):
+    wait = WebDriverWait(usuario_login, 10)
+    located_button_add_cart = wait.until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-test='add-to-cart']")))
 
+#clique no botão para adicionar
+    located_button_add_cart.click()
 
-def add_product(driver, name_product):
-    wait = WebDriverWait(driver, 10)
-
-    locator_product = wait.until(
-        EC.element_to_be_clickable((By.XPATH, f"//div[contains(@class, 'inventory_item_name ' and text()='{name_product}']/ancestor::ID")))
-    
-    button_add_cart = wait.until(
-    EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-test='add-to-cart']")))
-
-    button_add_cart.click()
-
-def checkout_cart(driver):
-    wait = WebDriverWait(driver, 10)
-
+#Localizando valor do icone do carrinho
+def checkout_cart(usuario_login):
+    wait = WebDriverWait(usuario_login, 10)
     located_checkout_cart = wait.until(
         EC._element_if_visible((By.CSS_SELECTOR, "[data-test='shopping-cart-link']")))
-        
+#retornando a quantidade de item no carrinho
     return located_checkout_cart.text
     
-def open_cart(driver):
-    wait = WebDriverWait(driver, 10)
+
+#Acessando icone do carrinho
+def open_cart(usuario_login):
+    wait = WebDriverWait(usuario_login, 10)
 
     located_open_cart = wait.until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-test="shopping-cart-link"]')))
     
+#Clicando no icone do carrinho
     located_open_cart.click()
 
     
