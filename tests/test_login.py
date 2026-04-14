@@ -4,9 +4,11 @@ import pytest
 
 @pytest.mark.parametrize("username_text, password_text, esperado",[
     ("standard_user", "secret_sauce", "sucesso"),
-    ("errado", "secret_sauce","erro"),
-    ("standard_user", "errado","erro"),
-    ("", "", "erro")
+    ("errado", "secret_sauce","Epic sadface: Username and password"),
+    ("standard_user", "errado","Epic sadface: Username and password"),
+    ("", "", "Epic sadface: Username is required")
+    ("standard_user", '', 'Epic sadface: Password is required')
+    ("", 'secret_sauce', 'Epic sadface: Username is required')
 ])
 
 def test_fazer_login(driver, username_text, password_text, esperado):
@@ -17,5 +19,7 @@ def test_fazer_login(driver, username_text, password_text, esperado):
 
     else:
         assert "O login falhou!" in error_login(driver)
+
+
 
    
