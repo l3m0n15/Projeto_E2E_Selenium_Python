@@ -2,6 +2,16 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+def title_cart(usuario_login);
+    wait = WebDriverWait(usuario_login, 10)
+
+    located_title_cart = wait.until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR, "[data-test='title']")))
+    
+    return located_title_cart.is_displayed()
+
+
+
 #Itens no carrinho
 def products_cart(driver,name_products: list):
     wait = WebDriverWait(driver, 10)
@@ -12,8 +22,7 @@ def products_cart(driver,name_products: list):
             EC.visibility_of_element_located((By.XPATH, f"//div[contains(@class,'cart_list')]//div[contains(@class,'inventory_item_name') and text()='{name_product}']")))
         
 #Verificação para sabre se o elemetno está visivel
-    return located_product.is_displayed()
- 
+        located_product.click()
 #Botão de remover do carrinho
 def remove_button(driver, name_products: list):
     wait = WebDriverWait(driver, 10)
@@ -23,7 +32,7 @@ def remove_button(driver, name_products: list):
         located_remove_button = wait.until(
             EC.element_to_be_clickable((By.XPATH, f"//div[contains(@data-test,'cart-list')]//div[contains(@data-test, 'remove-sauce-labs-backpack') and text()='{name_product}']")))
         
-    located_remove_button.click()
+        located_remove_button.click()
 
 #Botão de continuar = 'Checkout'
 def continue_button_cart(driver):
