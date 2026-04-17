@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 def title_finish(usuario_login):
     wait = WebDriverWait(usuario_login, 5)
     located_title_finish = wait.until (
-    EC.visibility_of_element_located((By.CSS_SELECTOR, '[data-test="title"]')))
+        EC.visibility_of_element_located((By.CSS_SELECTOR, '[data-test="title"]')))
     return located_title_finish.is_displayed()
 
 #Produtos que estão na aba final
@@ -14,7 +14,7 @@ def products_finish(usuario_login, products: list):
     wait = WebDriverWait(usuario_login, 5)
     for product in products:
         located_products_finish = wait.until(
-            EC.visibility_of_element_located((By.XPATH, f'[//a[contains(@data-test, "item-4-title-link")]//div[contains(@data-test,"inventory-item-name") and contains(text(),"{product}")]')))
+            EC.visibility_of_element_located((By.XPATH, f"//div[@data-test='inventory-item-name' and text()='{product}']")))
     return located_products_finish.is_displayed()
 
 #Valor do 'SUBTOTAL' dos produtos
@@ -38,39 +38,19 @@ def total_checkout(usuario_login):
         EC.visibility_of_element_located((By.CSS_SELECTOR, '[data-test="total-label"]')))
     return located_total_checkout.text
 
-
 #Soma total de todos os valores
 def soma_total(texto):
     valor = texto.split("$")[1]
     return float(valor)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#Botão de finalizar toda a compra
 def button_finish(usuario_login):
     wait = WebDriverWait(usuario_login, 5)
     located_button_finish = wait.until(
     EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-test="finish"]')))
     located_button_finish.click()
 
-
-
+#Botão de cancelar toda a compra
 def button_cancel(usuario_login):
     wait = WebDriverWait(usuario_login, 5) 
     located_button_cancel = wait.until(

@@ -12,17 +12,19 @@ def title_cart(usuario_login):
 #Itens no carrinho
 def products_cart(driver,name_products: list):
     wait = WebDriverWait(driver, 10)
+    results = []
     for name_product in name_products:
         located_product = wait.until(
             EC.visibility_of_element_located((By.XPATH, f"//div[contains(@class,'cart_list')]//div[contains(@class,'inventory_item_name') and text()='{name_product}']")))
-    return located_product.is_displayed()
+        results.append(located_product.is_displayed())
+    return results
 
 #Botão de remover do carrinho
 def remove_button(driver, name_products: list):
     wait = WebDriverWait(driver, 10)
     for name_product in name_products:
         located_remove_button = wait.until(
-            EC.element_to_be_clickable((By.XPATH, f"//div[contains(@data-test,'cart-list')]//div[contains(@data-test, 'remove-sauce-labs-backpack') and text()='{name_product}']")))
+            EC.element_to_be_clickable((By.XPATH, f"//div[@data-test= 'inventory-item-name' and text()='{name_product}']/../..//button[contains(@data-test, 'remove-sauce-labs-backpack')]")))
         located_remove_button.click()
 
 #Botão de continuar = 'Checkout'
@@ -40,10 +42,10 @@ def back_button_cart(driver):
     located_back_button_cart.click()
 
 #Preço do produto dentro do carrinho
-def preço_product_cart(usuario_login, name_products):
+def preco_product_cart(usuario_login, name_products):
     wait = WebDriverWait(usuario_login, 5)
     for name_product in name_products:
         located_product_cart = wait.until(
-            EC.visibility_of_element_located((By.CSS_SELECTOR, f'[//div[contains(@data-test, "inventory-item-price") and text()="{name_product}"]')))
+            EC.visibility_of_element_located((By.XPATH, f"//div[@data-test='inventory-item-name' and text()='{name_product}']/../..//div[contains(@data-test, 'inventory-item-price')]")))
     return located_product_cart.text
 

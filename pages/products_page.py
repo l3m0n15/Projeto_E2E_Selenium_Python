@@ -32,7 +32,7 @@ def button_add(usuario_login):
 def back_shopping(usuario_login):
     wait = WebDriverWait(usuario_login, 5)
     located_back_to_products = wait.until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-test="back-to-products"]')))
+        EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-test="back-to-products"]')))
     located_back_to_products.click()
 
 #Localizando valor do icone do carrinho
@@ -52,7 +52,9 @@ def open_cart(usuario_login):
 #Preço dos produtos
 def price_products(usuario_login, name_products):
     wait = WebDriverWait(usuario_login, 5)
+    results = []
     for name_product in name_products:
         located_price_products = wait.until(
-            EC.visibility_of_element_located((By.XPATH, f"//div[@data-test='inventory-item-name' and text()='{name_product}']/../../..//div[@data-test='inventory-item-price']")))
-    return located_price_products.text
+            EC.visibility_of_element_located((By.XPATH, f"//div[@data-test='inventory-item-name' and text()='{name_product}']/../../..//div[contains(@data-test,'inventory-item-price')]")))
+        results.append(located_price_products.text)
+    return results
