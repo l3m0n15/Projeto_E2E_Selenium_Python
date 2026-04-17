@@ -50,9 +50,9 @@ def open_cart(usuario_login):
     located_open_cart.click()
 
 #Preço dos produtos
-def price_products(usuario_login,price_products):
+def price_products(usuario_login, name_products):
     wait = WebDriverWait(usuario_login, 5)
-    for price_product in price_products:
+    for name_product in name_products:
         located_price_products = wait.until(
-            EC.visibility_of_element_located((By.XPATH, f'[//div[contains(@data-test, "inventory-item-price") and text()="{price_product}"]')))
+            EC.visibility_of_element_located((By.XPATH, f"//div[@data-test='inventory-item-name' and text()='{name_product}']/../../..//div[@data-test='inventory-item-price']")))
     return located_price_products.text
