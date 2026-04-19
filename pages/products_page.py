@@ -42,12 +42,12 @@ def checkout_cart(usuario_login):
         EC.visibility_of_element_located((By.CSS_SELECTOR, "[data-test='shopping-cart-link']")))
     return located_checkout_cart.text
     
-#Acessando icone do carrinho
-def open_cart(usuario_login):
+#Acessando icone do carrinho/Troca de pagina
+def usuario_products(usuario_login):
     wait = WebDriverWait(usuario_login, 5)
-    located_open_cart = wait.until(
+    located_usuario_products = wait.until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-test="shopping-cart-link"]')))
-    located_open_cart.click()
+    located_usuario_products.click()
 
 #Preço dos produtos
 def price_products(usuario_login, name_products):

@@ -10,8 +10,8 @@ def title_cart(usuario_login):
     return located_title_cart.is_displayed()
 
 #Itens no carrinho
-def products_cart(driver,name_products: list):
-    wait = WebDriverWait(driver, 10)
+def products_cart(usuario_login,name_products: list):
+    wait = WebDriverWait(usuario_login, 10)
     results = []
     for name_product in name_products:
         located_product = wait.until(
@@ -20,23 +20,23 @@ def products_cart(driver,name_products: list):
     return results
 
 #Botão de remover do carrinho
-def remove_button(driver, name_products: list):
-    wait = WebDriverWait(driver, 10)
+def remove_button(usuario_login, name_products: list):
+    wait = WebDriverWait(usuario_login, 10)
     for name_product in name_products:
         located_remove_button = wait.until(
-            EC.element_to_be_clickable((By.XPATH, f"//div[@data-test= 'inventory-item-name' and text()='{name_product}']/../..//button[contains(@data-test, 'remove-sauce-labs-backpack')]")))
+            EC.element_to_be_clickable((By.XPATH, f"//div[@data-test= 'inventory-item-name' and text()='{name_product}']/../..//button[contains(@data-test,'remove')]")))
         located_remove_button.click()
 
 #Botão de continuar = 'Checkout'
-def continue_button_cart(driver):
-    wait = WebDriverWait(driver, 10)
-    located_continue_button_cart = wait.until(
+def usuario_cart(usuario_login):
+    wait = WebDriverWait(usuario_login, 10)
+    located_usuario_cart = wait.until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-test='checkout']")))
-    located_continue_button_cart.click()
+    located_usuario_cart.click()
 
 #Botão de voltar para a loja
-def back_button_cart(driver):
-    wait = WebDriverWait(driver, 10)
+def back_button_cart(usuario_login):
+    wait = WebDriverWait(usuario_login, 10)
     located_back_button_cart = wait.until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-test="continue-shopping"]')))
     located_back_button_cart.click()
@@ -44,8 +44,10 @@ def back_button_cart(driver):
 #Preço do produto dentro do carrinho
 def preco_product_cart(usuario_login, name_products):
     wait = WebDriverWait(usuario_login, 5)
+    results = []
     for name_product in name_products:
         located_product_cart = wait.until(
             EC.visibility_of_element_located((By.XPATH, f"//div[@data-test='inventory-item-name' and text()='{name_product}']/../..//div[contains(@data-test, 'inventory-item-price')]")))
-    return located_product_cart.text
+        results.append(located_product_cart.text)
+    return results
 
