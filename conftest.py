@@ -6,6 +6,7 @@ from pages.products_page import open_cart
 from pages.login_page import fazer_login
 from pages.cart_page import continue_button_cart
 from pages.checkout_page import info_custom_user
+from pages.finish_page import go_to_finish
 
 #Atalho com todos os produtos para cenários de compra completa
 all_products = [
@@ -89,3 +90,8 @@ def usuario_finish_produto(usuario_products, products):
     continue_button_cart(usuario_products)
     info_custom_user(usuario_products, "André", "Ryan", "05210290")
     return usuario_products
+
+@pytest.fixture
+def usuario_complete(usuario_finish):
+    go_to_finish(usuario_finish)
+    return usuario_finish
