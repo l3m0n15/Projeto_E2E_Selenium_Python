@@ -1,13 +1,13 @@
-from pages.login_page import fazer_login, error_login
 import pytest
+from pages.login_page import fazer_login, error_login
 
-#Login valido
+#Login válido
 def test_login_valid(driver):
     fazer_login(driver, "standard_user", "secret_sauce",)
 
     assert "inventory.html" in driver.current_url
 
-#Login error
+#Login com erro
 @pytest.mark.parametrize('username_text, password_text, esperado',[
 
     ("errado", "secret_sauce","Epic sadface: Username and password do not match any user in this service"),
@@ -17,7 +17,7 @@ def test_login_valid(driver):
     ("", 'secret_sauce', 'Epic sadface: Username is required')
 ])
 
-#test login error
+#Teste para validar mensagem de erro no login
 def test_login_error(driver, username_text, password_text, esperado):
     fazer_login(driver, username_text, password_text)
 

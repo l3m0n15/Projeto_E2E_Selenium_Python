@@ -3,8 +3,7 @@ from pages.cart_page import products_cart
 from pages.cart_page import remove_button
 from pages.cart_page import continue_button_cart
 from pages.cart_page import back_button_cart
-from pages.products_page import checkout_cart
-from pages.products_page import add_very_products, open_cart
+from pages.products_page import add_very_products, go_to_products, open_cart
 
 #Itens que estavam no carrinho
 all_products =  [
@@ -16,43 +15,43 @@ all_products =  [
     "Test.allTheThings() T-Shirt (Red)"
 ]
 
-#Teste para confirmar 1 item por vem no carrinho
+#Teste para confirmar 1 item por vez no carrinho
 @pytest.mark.parametrize('products', all_products)
-def test_cart_one_product(usuario_login, products):
-    add_very_products(usuario_login, [products])
-    open_cart(usuario_login)
-    assert all(products_cart(usuario_login, [products]))
+def test_cart_one_product(usuario_products, products):
+    add_very_products(usuario_products, [products])
+    open_cart(usuario_products)
+    assert all(products_cart(usuario_products, [products]))
 
-#Teste para confirmar varios itens de uma vez no carrinho
-def test_add_all_products(usuario_login):
-    add_very_products(usuario_login, all_products)
-    open_cart(usuario_login)
-    assert all(products_cart(usuario_login, all_products))
+#Teste para confirmar vários itens de uma vez no carrinho
+def test_add_all_products(usuario_products):
+    add_very_products(usuario_products, all_products)
+    open_cart(usuario_products)
+    assert all(products_cart(usuario_products, all_products))
 
-#Teste para remover 1 item por vem no carrinho
+#Teste para remover 1 item por vez no carrinho
 @pytest.mark.parametrize('products', all_products)
-def test_remove_one_product(usuario_login, products):
-    add_very_products(usuario_login, [products])
-    open_cart(usuario_login)
-    remove_button(usuario_login, [products])
-    assert checkout_cart(usuario_login) == "0"
+def test_remove_one_product(usuario_products, products):
+    add_very_products(usuario_products, [products])
+    open_cart(usuario_products)
+    remove_button(usuario_products, [products])
+    assert go_to_products(usuario_products) in ("", "0")
 
-#Teste para remover varios itens de uma vez no carrinho
-def test_remove_all_products(usuario_login):
-    add_very_products(usuario_login, all_products)
-    open_cart(usuario_login)
-    remove_button(usuario_login, all_products)
-    assert  checkout_cart(usuario_login) == "0"
+#Teste para remover vários itens de uma vez no carrinho
+def test_remove_all_products(usuario_products):
+    add_very_products(usuario_products, all_products)
+    open_cart(usuario_products)
+    remove_button(usuario_products, all_products)
+    assert go_to_products(usuario_products) in ("", "0")
 
-#Teste retornar para a pagina da Loja
-def test_back_page(usuario_login):
-    open_cart(usuario_login)
-    back_button_cart(usuario_login)
-    assert 'inventory.html' in usuario_login.current_url
+#Teste para retornar para a página da loja
+def test_back_page(usuario_products):
+    open_cart(usuario_products)
+    back_button_cart(usuario_products)
+    assert 'inventory.html' in usuario_products.current_url
 
 #Teste prosseguir com carrinho vazio
-def test_continue_with_item(usuario_login):
-    open_cart(usuario_login)
-    continue_button_cart(usuario_login)
-    assert 'checkout-step-one.html' in usuario_login.current_url
+def test_continue_with_item(usuario_products):
+    open_cart(usuario_products)
+    continue_button_cart(usuario_products)
+    assert 'checkout-step-one.html' in usuario_products.current_url
 

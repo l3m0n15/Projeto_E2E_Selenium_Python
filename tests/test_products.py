@@ -1,8 +1,8 @@
 from pages.products_page import add_very_products
-from pages.products_page import button_add
-from pages.products_page import back_shopping
+from pages.products_page import go_to_products
 import pytest
 
+#Atalho para todos os produtos
 all_products= [
         "Sauce Labs Backpack",
         "Sauce Labs Bike Light",
@@ -12,29 +12,13 @@ all_products= [
         "Test.allTheThings() T-Shirt (Red)"
 ]
 
-@pytest.mark.parametrize('products','all_products')
-def test_add_one_product(usuario_login, products):
-    add_very_products(usuario_login, [products])
-    button_add(usuario_login, [products])
-    back_shopping(usuario_login, [products])
+#Adicionando 1 produto por vez no carrinho
+@pytest.mark.parametrize('products', all_products)
+def test_add_one_product(usuario_products, products):
+    add_very_products(usuario_products, [products])
+    assert go_to_products(usuario_products) == '1'
 
-    
-
-    assert add_very_products(usuario_login, products)
-    assert button_add(usuario_login, products)
-    assert back_shopping(usuario_login, products)
-
-
-
-def test_add_lis(usuario_login):
-    add_very_products(usuario_login, all_products)
-    button_add(usuario_login, all_products)
-    back_shopping(usuario_login, all_products)
-
-
-    assert add_very_products(usuario_login, all_products)
-    assert button_add(usuario_login, all_products)
-    assert back_shopping(usuario_login, all_products)
-
-
-
+#Adicionando todos os produtos de uma vez para o carrinho
+def test_add_list(usuario_products):
+    add_very_products(usuario_products, all_products)
+    assert go_to_products(usuario_products) == '6'

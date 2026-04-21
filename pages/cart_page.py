@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-#Titulo da pagina do carrinho
+#Título da página do carrinho
 def title_cart(usuario_login):
     wait = WebDriverWait(usuario_login, 10)
     located_title_cart = wait.until(
@@ -28,11 +28,11 @@ def remove_button(usuario_login, name_products: list):
         located_remove_button.click()
 
 #Botão de continuar = 'Checkout'
-def usuario_cart(usuario_login):
+def continue_button_cart(usuario_login):
     wait = WebDriverWait(usuario_login, 10)
-    located_usuario_cart = wait.until(
+    located_go_to_cart = wait.until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-test='checkout']")))
-    located_usuario_cart.click()
+    located_go_to_cart.click()
 
 #Botão de voltar para a loja
 def back_button_cart(usuario_login):

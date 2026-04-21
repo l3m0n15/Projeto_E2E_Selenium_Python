@@ -1,6 +1,5 @@
 import pytest
 from pages.finish_page import subtotal_checkout, tax_checkout, total_checkout, soma_total
-from pages.products_page import add_very_products
 #Atalho para todos os produtos
 all_products= [
         "Sauce Labs Backpack",
@@ -13,17 +12,16 @@ all_products= [
 
 #Teste 1 item por vez
 @pytest.mark.parametrize("products", all_products)
-def test_soma_one_products(usuario_finish, products):
-    add_very_products(usuario_finish, [products])
+def test_soma_one_products(usuario_finish_produto):
 
-    subtotal= soma_total(subtotal_checkout(usuario_finish))
-    tax = soma_total(tax_checkout(usuario_finish))
-    total = soma_total(total_checkout(usuario_finish))
+    subtotal = soma_total(subtotal_checkout(usuario_finish_produto))
+    tax = soma_total(tax_checkout(usuario_finish_produto))
+    total = soma_total(total_checkout(usuario_finish_produto))
 
     assert round(subtotal + tax, 2) ==round(total, 2)
 
+#Teste com todos os produtos adicionados no checkout final
 def test_finish_all(usuario_finish):
-    add_very_products(usuario_finish)
     subtotal = soma_total(subtotal_checkout(usuario_finish))
     tax = soma_total(tax_checkout(usuario_finish))
     total = soma_total(total_checkout(usuario_finish))
