@@ -1,548 +1,766 @@
-# Projeto QA Swag Labs com Playwright
+# Projeto QA Swag Labs com Selenium e Python
 
-## Casos de Teste
+Automacao de testes end-to-end para o site Swag Labs, usando Selenium WebDriver,
+Pytest e Page Object Model.
 
-### CT-01: Login válido
-**Descrição:** Validar login com credenciais corretas.
+## Objetivo
 
-**Passos:**
-1. Acessar a página de login.
-2. Inserir usuário válido.
-3. Inserir senha válida.
-4. Clicar em Login.
+Validar os principais fluxos do Swag Labs:
 
-**Resultado esperado:**  
-Usuário entra no sistema e é direcionado para a página de inventário.
+- Login com dados validos e invalidos.
+- Adicao de produtos ao carrinho.
+- Validacao de produtos no carrinho.
+- Remocao de produtos.
+- Acesso ao checkout.
+- Validacao de campos obrigatorios no checkout.
+- Validacao de calculo no resumo da compra.
+- Finalizacao da compra.
+- Retorno para a loja apos compra concluida.
 
-### CT-02: Login inválido com senha errada
-**Descrição:** Validar que o sistema bloqueia login quando a senha está incorreta.
+## Tecnologias
 
-**Passos:**
-1. Acessar a página de login.
-2. Inserir usuário válido.
-3. Inserir senha incorreta.
-4. Clicar em Login.
-5. Verificar a mensagem de erro.
+- Python
+- Selenium WebDriver
+- Pytest
+- Page Object Model
+- Chrome WebDriver gerenciado pelo Selenium
 
-**Resultado esperado:**  
-Sistema exibe a mensagem `Epic sadface: Username and password do not match any user in this service`.
+## Estrutura do projeto
 
-### CT-03: Login inválido com usuário errado
-**Descrição:** Validar que o sistema bloqueia login quando o usuário está incorreto.
+```text
+.
+|-- conftest.py
+|-- pages/
+|   |-- __init__.py
+|   |-- cart_page.py
+|   |-- checkout_page.py
+|   |-- complete_page.py
+|   |-- finish_page.py
+|   |-- login_page.py
+|   `-- products_page.py
+|-- tests/
+|   |-- test_cart.py
+|   |-- test_checkout.py
+|   |-- test_complete.py
+|   |-- test_finish.py
+|   |-- test_login.py
+|   `-- test_products.py
+|-- requirements.txt
+|-- README.md
+`-- LICENSE
+```
 
-**Passos:**
-1. Acessar a página de login.
-2. Inserir usuário incorreto.
-3. Inserir senha válida.
-4. Clicar em Login.
-5. Verificar a mensagem de erro.
+## Organizacao
 
-**Resultado esperado:**  
-Sistema exibe a mensagem `Epic sadface: Username and password do not match any user in this service`.
+### `conftest.py`
 
-### CT-04: Login inválido com usuário e senha errados
-**Descrição:** Validar que o sistema bloqueia login quando usuário e senha estão incorretos.
+Arquivo responsavel pela configuracao do navegador e pelos fixtures usados nos
+testes.
 
-**Passos:**
-1. Acessar a página de login.
-2. Inserir usuário incorreto.
-3. Inserir senha incorreta.
-4. Clicar em Login.
-5. Verificar a mensagem de erro.
+Principais fixtures:
 
-**Resultado esperado:**  
-Sistema exibe a mensagem `Epic sadface: Username and password do not match any user in this service`.
+- `driver`: abre o Chrome, acessa `https://www.saucedemo.com/`, maximiza a tela
+  e fecha o navegador ao final do teste.
+- `usuario_login`: realiza login com `standard_user` e `secret_sauce`.
+- `usuario_products`: reutiliza o usuario logado na pagina de produtos.
+- `usuario_cart`: abre o carrinho.
+- `usuario_checkout`: acessa o checkout step one.
+- `usuario_finish`: monta o fluxo com todos os produtos ate o checkout overview.
+- `usuario_finish_produto`: monta o fluxo com um produto parametrizado.
+- `usuario_complete`: finaliza a compra e acessa a pagina de conclusao.
 
-### CT-05: Login inválido com usuário e senha vazios
-**Descrição:** Validar que o sistema exige o preenchimento do usuário antes de autenticar.
+### `pages/`
 
-**Passos:**
-1. Acessar a página de login.
-2. Deixar usuário vazio.
-3. Deixar senha vazia.
-4. Clicar em Login.
-5. Verificar a mensagem de erro.
+Camada Page Object Model. Cada arquivo concentra acoes e validacoes de uma tela:
 
-**Resultado esperado:**  
-Sistema exibe a mensagem `Epic sadface: Username is required`.
+- `login_page.py`: login e mensagens de erro.
+- `products_page.py`: produtos, botao Add to Cart, retorno para listagem,
+  contador do carrinho e acesso ao carrinho.
+- `cart_page.py`: validacao de itens, remocao, checkout e continue shopping.
+- `checkout_page.py`: preenchimento do formulario e validacao de erros.
+- `finish_page.py`: subtotal, taxa, total e finalizacao da compra.
+- `complete_page.py`: titulo da pagina final e botao Back Home.
 
-### CT-06: Login inválido com senha vazia
-**Descrição:** Validar que o sistema exige senha quando o usuário foi informado.
+### `tests/`
 
-**Passos:**
-1. Acessar a página de login.
-2. Inserir usuário válido.
-3. Deixar senha vazia.
-4. Clicar em Login.
-5. Verificar a mensagem de erro.
+Camada de testes automatizados:
 
-**Resultado esperado:**  
-Sistema exibe a mensagem `Epic sadface: Password is required`.
+- `test_login.py`: cenarios de login valido e invalido.
+- `test_products.py`: adicao de produtos pela pagina de produtos.
+- `test_cart.py`: validacao, remocao e navegacao pelo carrinho.
+- `test_checkout.py`: formulario de checkout e campos obrigatorios.
+- `test_finish.py`: validacao de subtotal, taxa e total.
+- `test_complete.py`: pagina de compra concluida.
 
-### CT-07: Login inválido com usuário vazio
-**Descrição:** Validar que o sistema exige usuário quando a senha foi informada.
+## Como executar
 
-**Passos:**
-1. Acessar a página de login.
-2. Deixar usuário vazio.
-3. Inserir senha válida.
-4. Clicar em Login.
-5. Verificar a mensagem de erro.
+Instale as dependencias:
 
-**Resultado esperado:**  
-Sistema exibe a mensagem `Epic sadface: Username is required`.
+```bash
+pip install -r requirements.txt
+```
 
-### CT-08: Login inválido com usuário bloqueado
-**Descrição:** Validar que o sistema bloqueia acesso para usuário bloqueado.
+Execute todos os testes:
 
-**Passos:**
-1. Acessar a página de login.
-2. Inserir usuário bloqueado.
-3. Inserir senha válida.
-4. Clicar em Login.
-5. Verificar a mensagem de erro.
+```bash
+python -m pytest
+```
 
-**Resultado esperado:**  
-Sistema exibe a mensagem `Epic sadface: Sorry, this user has been locked out.`.
+Liste os testes coletados:
 
-### CT-09: Adicionar produtos pelos nomes
-**Descrição:** Validar se o usuário consegue adicionar produtos pela tela de detalhe do produto.
+```bash
+python -m pytest --collect-only -q
+```
 
-**Passos:**
-1. Fazer login.
-2. Clicar no nome do produto.
-3. Adicionar produto ao carrinho.
-4. Voltar para a loja.
-5. Repetir o fluxo para todos os produtos.
-6. Verificar o badge do carrinho.
+## Total de testes
 
-**Resultado esperado:**  
-Usuário adiciona 6 produtos ao carrinho.
+O projeto possui **43 casos de teste documentados**, seguindo a mesma coleta do
+Pytest.
 
-### CT-10: Adicionar produtos pela listagem principal
-**Descrição:** Validar a adição de produtos pelo botão Add to Cart da listagem principal.
+## Produtos usados nos testes
 
-**Passos:**
-1. Fazer login.
-2. Adicionar todos os produtos pela listagem.
-3. Verificar o badge do carrinho.
+- Sauce Labs Backpack
+- Sauce Labs Bike Light
+- Sauce Labs Bolt T-Shirt
+- Sauce Labs Fleece Jacket
+- Sauce Labs Onesie
+- Test.allTheThings() T-Shirt (Red)
 
-**Resultado esperado:**  
-Usuário adiciona 6 produtos ao carrinho através do atalho da listagem.
+## Casos de teste
 
-### CT-11: Remover itens pelo inventário
-**Descrição:** Validar se o usuário consegue remover produtos adicionados ao carrinho pela página de inventário.
+### CT-01: Validar Sauce Labs Backpack no carrinho
 
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Remover os produtos pelo inventário.
-4. Verificar o badge do carrinho.
+**Arquivo:** `tests/test_cart.py::test_cart_one_product[Sauce Labs Backpack]`
 
-**Resultado esperado:**  
-Todos os produtos são removidos e o badge do carrinho não fica visível.
-
-### CT-12: Filtrar produtos por ordem A-Z
-**Descrição:** Validar ordenação de produtos por nome em ordem crescente.
+**Descricao:** Confirmar que o produto Sauce Labs Backpack aparece corretamente no carrinho.
 
 **Passos:**
 1. Fazer login.
-2. Localizar o seletor de filtros.
-3. Selecionar a opção "Name (A to Z)".
-4. Capturar os nomes dos produtos exibidos.
-5. Verificar a ordem dos produtos.
-
-**Resultado esperado:**  
-Produtos são exibidos em ordem alfabética de A-Z.
-
-### CT-13: Filtrar produtos por ordem Z-A
-**Descrição:** Validar ordenação de produtos por nome em ordem decrescente.
-
-**Passos:**
-1. Fazer login.
-2. Localizar o seletor de filtros.
-3. Selecionar a opção "Name (Z to A)".
-4. Capturar os nomes dos produtos exibidos.
-5. Verificar a ordem dos produtos.
-
-**Resultado esperado:**  
-Produtos são exibidos em ordem alfabética de Z-A.
-
-### CT-14: Filtrar produtos do menor preço para o maior
-**Descrição:** Validar ordenação de produtos por preço crescente.
-
-**Passos:**
-1. Fazer login.
-2. Localizar o seletor de filtros.
-3. Selecionar a opção "Price (low to high)".
-4. Capturar os preços dos produtos exibidos.
-5. Verificar a ordem dos preços.
-
-**Resultado esperado:**  
-Produtos são exibidos do menor preço para o maior.
-
-### CT-15: Filtrar produtos do maior preço para o menor
-**Descrição:** Validar ordenação de produtos por preço decrescente.
-
-**Passos:**
-1. Fazer login.
-2. Localizar o seletor de filtros.
-3. Selecionar a opção "Price (high to low)".
-4. Capturar os preços dos produtos exibidos.
-5. Verificar a ordem dos preços.
-
-**Resultado esperado:**  
-Produtos são exibidos do maior preço para o menor.
-
-### CT-16: Verificar produtos no carrinho
-**Descrição:** Validar se os produtos adicionados no inventário aparecem corretamente no carrinho.
-
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
+2. Adicionar Sauce Labs Backpack ao carrinho.
 3. Acessar o carrinho.
-4. Capturar os produtos exibidos no carrinho.
-5. Comparar com os produtos adicionados.
+4. Validar o produto exibido.
 
-**Resultado esperado:**  
-O carrinho exibe os mesmos produtos adicionados no inventário.
+**Resultado esperado:** Sauce Labs Backpack aparece no carrinho.
 
-### CT-17: Remover produtos do carrinho
-**Descrição:** Validar a remoção de todos os produtos diretamente pela página do carrinho.
+### CT-02: Validar Sauce Labs Bike Light no carrinho
+
+**Arquivo:** `tests/test_cart.py::test_cart_one_product[Sauce Labs Bike Light]`
+
+**Descricao:** Confirmar que o produto Sauce Labs Bike Light aparece corretamente no carrinho.
 
 **Passos:**
 1. Fazer login.
-2. Adicionar produtos ao carrinho.
+2. Adicionar Sauce Labs Bike Light ao carrinho.
+3. Acessar o carrinho.
+4. Validar o produto exibido.
+
+**Resultado esperado:** Sauce Labs Bike Light aparece no carrinho.
+
+### CT-03: Validar Sauce Labs Bolt T-Shirt no carrinho
+
+**Arquivo:** `tests/test_cart.py::test_cart_one_product[Sauce Labs Bolt T-Shirt]`
+
+**Descricao:** Confirmar que o produto Sauce Labs Bolt T-Shirt aparece corretamente no carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Adicionar Sauce Labs Bolt T-Shirt ao carrinho.
+3. Acessar o carrinho.
+4. Validar o produto exibido.
+
+**Resultado esperado:** Sauce Labs Bolt T-Shirt aparece no carrinho.
+
+### CT-04: Validar Sauce Labs Fleece Jacket no carrinho
+
+**Arquivo:** `tests/test_cart.py::test_cart_one_product[Sauce Labs Fleece Jacket]`
+
+**Descricao:** Confirmar que o produto Sauce Labs Fleece Jacket aparece corretamente no carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Adicionar Sauce Labs Fleece Jacket ao carrinho.
+3. Acessar o carrinho.
+4. Validar o produto exibido.
+
+**Resultado esperado:** Sauce Labs Fleece Jacket aparece no carrinho.
+
+### CT-05: Validar Sauce Labs Onesie no carrinho
+
+**Arquivo:** `tests/test_cart.py::test_cart_one_product[Sauce Labs Onesie]`
+
+**Descricao:** Confirmar que o produto Sauce Labs Onesie aparece corretamente no carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Adicionar Sauce Labs Onesie ao carrinho.
+3. Acessar o carrinho.
+4. Validar o produto exibido.
+
+**Resultado esperado:** Sauce Labs Onesie aparece no carrinho.
+
+### CT-06: Validar Test.allTheThings() T-Shirt (Red) no carrinho
+
+**Arquivo:** `tests/test_cart.py::test_cart_one_product[Test.allTheThings() T-Shirt (Red)]`
+
+**Descricao:** Confirmar que o produto Test.allTheThings() T-Shirt (Red) aparece corretamente no carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Adicionar Test.allTheThings() T-Shirt (Red) ao carrinho.
+3. Acessar o carrinho.
+4. Validar o produto exibido.
+
+**Resultado esperado:** Test.allTheThings() T-Shirt (Red) aparece no carrinho.
+
+### CT-07: Validar todos os produtos no carrinho
+
+**Arquivo:** `tests/test_cart.py::test_add_all_products`
+
+**Descricao:** Confirmar que todos os produtos adicionados aparecem no carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Adicionar todos os produtos ao carrinho.
+3. Acessar o carrinho.
+4. Validar os produtos exibidos.
+
+**Resultado esperado:** Todos os 6 produtos aparecem no carrinho.
+
+### CT-08: Remover Sauce Labs Backpack do carrinho
+
+**Arquivo:** `tests/test_cart.py::test_remove_one_product[Sauce Labs Backpack]`
+
+**Descricao:** Validar remocao do produto Sauce Labs Backpack no carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Adicionar Sauce Labs Backpack ao carrinho.
+3. Acessar o carrinho.
+4. Remover o produto.
+5. Verificar o contador do carrinho.
+
+**Resultado esperado:** O contador do carrinho fica vazio ou `0`.
+
+### CT-09: Remover Sauce Labs Bike Light do carrinho
+
+**Arquivo:** `tests/test_cart.py::test_remove_one_product[Sauce Labs Bike Light]`
+
+**Descricao:** Validar remocao do produto Sauce Labs Bike Light no carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Adicionar Sauce Labs Bike Light ao carrinho.
+3. Acessar o carrinho.
+4. Remover o produto.
+5. Verificar o contador do carrinho.
+
+**Resultado esperado:** O contador do carrinho fica vazio ou `0`.
+
+### CT-10: Remover Sauce Labs Bolt T-Shirt do carrinho
+
+**Arquivo:** `tests/test_cart.py::test_remove_one_product[Sauce Labs Bolt T-Shirt]`
+
+**Descricao:** Validar remocao do produto Sauce Labs Bolt T-Shirt no carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Adicionar Sauce Labs Bolt T-Shirt ao carrinho.
+3. Acessar o carrinho.
+4. Remover o produto.
+5. Verificar o contador do carrinho.
+
+**Resultado esperado:** O contador do carrinho fica vazio ou `0`.
+
+### CT-11: Remover Sauce Labs Fleece Jacket do carrinho
+
+**Arquivo:** `tests/test_cart.py::test_remove_one_product[Sauce Labs Fleece Jacket]`
+
+**Descricao:** Validar remocao do produto Sauce Labs Fleece Jacket no carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Adicionar Sauce Labs Fleece Jacket ao carrinho.
+3. Acessar o carrinho.
+4. Remover o produto.
+5. Verificar o contador do carrinho.
+
+**Resultado esperado:** O contador do carrinho fica vazio ou `0`.
+
+### CT-12: Remover Sauce Labs Onesie do carrinho
+
+**Arquivo:** `tests/test_cart.py::test_remove_one_product[Sauce Labs Onesie]`
+
+**Descricao:** Validar remocao do produto Sauce Labs Onesie no carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Adicionar Sauce Labs Onesie ao carrinho.
+3. Acessar o carrinho.
+4. Remover o produto.
+5. Verificar o contador do carrinho.
+
+**Resultado esperado:** O contador do carrinho fica vazio ou `0`.
+
+### CT-13: Remover Test.allTheThings() T-Shirt (Red) do carrinho
+
+**Arquivo:** `tests/test_cart.py::test_remove_one_product[Test.allTheThings() T-Shirt (Red)]`
+
+**Descricao:** Validar remocao do produto Test.allTheThings() T-Shirt (Red) no carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Adicionar Test.allTheThings() T-Shirt (Red) ao carrinho.
+3. Acessar o carrinho.
+4. Remover o produto.
+5. Verificar o contador do carrinho.
+
+**Resultado esperado:** O contador do carrinho fica vazio ou `0`.
+
+### CT-14: Remover todos os produtos do carrinho
+
+**Arquivo:** `tests/test_cart.py::test_remove_all_products`
+
+**Descricao:** Validar remocao de todos os produtos no carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Adicionar todos os produtos ao carrinho.
 3. Acessar o carrinho.
 4. Remover todos os produtos.
-5. Verificar o badge do carrinho.
+5. Verificar o contador do carrinho.
 
-**Resultado esperado:**  
-Todos os produtos são removidos e o badge do carrinho não fica visível.
+**Resultado esperado:** O contador do carrinho fica vazio ou `0`.
 
-### CT-18: Acessar checkout pelo carrinho
-**Descrição:** Validar se o botão Checkout direciona o usuário para o formulário de checkout.
+### CT-15: Voltar do carrinho para a loja
 
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar o carrinho.
-4. Clicar no botão Checkout.
+**Arquivo:** `tests/test_cart.py::test_back_page`
 
-**Resultado esperado:**  
-Usuário é direcionado para a página `checkout-step-one.html`.
-
-### CT-19: Voltar do carrinho para a loja
-**Descrição:** Validar se o botão Continue Shopping retorna para a página de inventário.
+**Descricao:** Validar o botao Continue Shopping.
 
 **Passos:**
 1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar o carrinho.
-4. Clicar no botão Continue Shopping.
+2. Acessar o carrinho.
+3. Clicar em Continue Shopping.
 
-**Resultado esperado:**  
-Usuário retorna para a página de inventário.
+**Resultado esperado:** Usuario retorna para `inventory.html`.
 
-### CT-20: Preencher formulário de checkout
-**Descrição:** Validar preenchimento do formulário de checkout com dados aceitos.
+### CT-16: Acessar checkout pelo carrinho
+
+**Arquivo:** `tests/test_cart.py::test_continue_with_item`
+
+**Descricao:** Validar que o botao Checkout direciona para o formulario de checkout.
 
 **Passos:**
 1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar o carrinho.
-4. Clicar em Checkout.
-5. Preencher First Name, Last Name e Zip/Postal Code.
-6. Clicar em Continue.
+2. Acessar o carrinho.
+3. Clicar em Checkout.
 
-**Resultado esperado:**  
-Usuário avança para a página `checkout-step-two.html`.
+**Resultado esperado:** Usuario e direcionado para `checkout-step-one.html`.
+
+### CT-17: Checkout com informacoes validas
+
+**Arquivo:** `tests/test_checkout.py::test_info_valid`
+
+**Descricao:** Validar preenchimento correto das informacoes do checkout.
+
+**Passos:**
+1. Fazer login.
+2. Acessar o carrinho.
+3. Acessar o checkout.
+4. Preencher First Name, Last Name e Postal Code.
+5. Clicar em Continue.
+
+**Resultado esperado:** Usuario e direcionado para `checkout-step-two.html`.
+
+### CT-18: Checkout sem First Name
+
+**Arquivo:** `tests/test_checkout.py::test_info_invalid[-valid-valido-Error: First Name is required]`
+
+**Descricao:** Validar obrigatoriedade do campo First Name.
+
+**Passos:**
+1. Acessar o checkout.
+2. Deixar First Name vazio.
+3. Preencher Last Name e Postal Code.
+4. Clicar em Continue.
+
+**Resultado esperado:** Sistema exibe `Error: First Name is required`.
+
+### CT-19: Checkout sem Last Name
+
+**Arquivo:** `tests/test_checkout.py::test_info_invalid[valid--valid-Error: Last Name is required]`
+
+**Descricao:** Validar obrigatoriedade do campo Last Name.
+
+**Passos:**
+1. Acessar o checkout.
+2. Preencher First Name.
+3. Deixar Last Name vazio.
+4. Preencher Postal Code.
+5. Clicar em Continue.
+
+**Resultado esperado:** Sistema exibe `Error: Last Name is required`.
+
+### CT-20: Checkout sem Postal Code
+
+**Arquivo:** `tests/test_checkout.py::test_info_invalid[valid-valid--Error: Postal Code is required]`
+
+**Descricao:** Validar obrigatoriedade do campo Postal Code.
+
+**Passos:**
+1. Acessar o checkout.
+2. Preencher First Name e Last Name.
+3. Deixar Postal Code vazio.
+4. Clicar em Continue.
+
+**Resultado esperado:** Sistema exibe `Error: Postal Code is required`.
 
 ### CT-21: Cancelar checkout
-**Descrição:** Validar se o botão Cancel interrompe o checkout e retorna para o carrinho.
+
+**Arquivo:** `tests/test_checkout.py::test_back_page`
+
+**Descricao:** Validar retorno do checkout para o carrinho.
 
 **Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar o carrinho.
-4. Clicar em Checkout.
-5. Clicar em Cancel.
+1. Acessar o checkout.
+2. Clicar em Cancel.
 
-**Resultado esperado:**  
-Usuário retorna para a página do carrinho.
+**Resultado esperado:** Usuario retorna para `cart.html`.
 
-### CT-22: Checkout com todos os campos vazios
-**Descrição:** Validar erro ao tentar continuar checkout sem preencher nenhum campo.
+### CT-22: Validar titulo da pagina de compra finalizada
 
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Deixar First Name, Last Name e Zip/Postal Code vazios.
-5. Clicar em Continue.
-6. Verificar a mensagem de erro.
+**Arquivo:** `tests/test_complete.py::test_title_complete`
 
-**Resultado esperado:**  
-Sistema exibe a mensagem `Error: First Name is required`.
-
-### CT-23: Checkout com First Name preenchido
-**Descrição:** Validar erro quando apenas First Name é preenchido.
+**Descricao:** Validar a tela exibida apos finalizar a compra.
 
 **Passos:**
 1. Fazer login.
 2. Adicionar produtos ao carrinho.
 3. Acessar checkout.
-4. Preencher somente First Name.
-5. Clicar em Continue.
-6. Verificar a mensagem de erro.
+4. Preencher dados validos.
+5. Clicar em Finish.
+6. Validar o titulo da pagina.
 
-**Resultado esperado:**  
-Sistema exibe a mensagem `Error: Last Name is required`.
+**Resultado esperado:** A pagina exibe `Checkout: Complete!`.
 
-### CT-24: Checkout com First Name e Last Name preenchidos
-**Descrição:** Validar erro quando o campo Zip/Postal Code fica vazio.
+### CT-23: Voltar para home apos compra finalizada
+
+**Arquivo:** `tests/test_complete.py::test_back_home`
+
+**Descricao:** Validar o botao Back Home na tela de compra concluida.
+
+**Passos:**
+1. Finalizar uma compra.
+2. Clicar em Back Home.
+
+**Resultado esperado:** Usuario retorna para `inventory.html`.
+
+### CT-24: Validar total da compra com Sauce Labs Backpack
+
+**Arquivo:** `tests/test_finish.py::test_soma_one_products[Sauce Labs Backpack]`
+
+**Descricao:** Validar o calculo do total no checkout overview para Sauce Labs Backpack.
 
 **Passos:**
 1. Fazer login.
-2. Adicionar produtos ao carrinho.
+2. Adicionar Sauce Labs Backpack ao carrinho.
 3. Acessar checkout.
-4. Preencher First Name e Last Name.
-5. Deixar Zip/Postal Code vazio.
-6. Clicar em Continue.
-7. Verificar a mensagem de erro.
-
-**Resultado esperado:**  
-Sistema exibe a mensagem `Error: Postal Code is required`.
-
-### CT-25: Checkout somente com Last Name preenchido
-**Descrição:** Validar erro quando apenas Last Name é preenchido.
-
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Preencher somente Last Name.
-5. Clicar em Continue.
-6. Verificar a mensagem de erro.
-
-**Resultado esperado:**  
-Sistema exibe a mensagem `Error: First Name is required`.
-
-### CT-26: Checkout somente com Zip/Postal Code preenchido
-**Descrição:** Validar erro quando apenas Zip/Postal Code é preenchido.
-
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Preencher somente Zip/Postal Code.
-5. Clicar em Continue.
-6. Verificar a mensagem de erro.
-
-**Resultado esperado:**  
-Sistema exibe a mensagem `Error: First Name is required`.
-
-### CT-27: Checkout com First Name e Zip/Postal Code preenchidos
-**Descrição:** Validar erro quando Last Name fica vazio.
-
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Preencher First Name e Zip/Postal Code.
-5. Deixar Last Name vazio.
-6. Clicar em Continue.
-7. Verificar a mensagem de erro.
-
-**Resultado esperado:**  
-Sistema exibe a mensagem `Error: Last Name is required`.
-
-### CT-28: Checkout com Last Name e Zip/Postal Code preenchidos
-**Descrição:** Validar erro quando First Name fica vazio.
-
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Preencher Last Name e Zip/Postal Code.
-5. Deixar First Name vazio.
-6. Clicar em Continue.
-7. Verificar a mensagem de erro.
-
-**Resultado esperado:**  
-Sistema exibe a mensagem `Error: First Name is required`.
-
-### CT-29: Checkout com campos numéricos
-**Descrição:** Validar comportamento do checkout quando os campos recebem números junto com texto.
-
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Preencher os campos com números junto com texto.
-5. Clicar em Continue.
-
-**Resultado esperado:**  
-Sistema permite continuar para a página `checkout-step-two.html`.
-
-### CT-30: Checkout com caracteres especiais
-**Descrição:** Validar comportamento do checkout quando os campos recebem caracteres especiais.
-
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Preencher os campos com caracteres especiais.
-5. Clicar em Continue.
-
-**Resultado esperado:**  
-Sistema permite continuar para a página `checkout-step-two.html`.
-
-### CT-31: Checkout com texto muito grande
-**Descrição:** Validar comportamento do checkout quando First Name e Last Name recebem textos longos.
-
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Preencher First Name e Last Name com texto muito grande.
-5. Preencher Zip/Postal Code.
-6. Clicar em Continue.
-
-**Resultado esperado:**  
-Sistema permite continuar para a página `checkout-step-two.html`.
-
-### CT-32: Checkout com SQL injection
-**Descrição:** Validar se entrada com SQL injection é tratada como texto comum no formulário.
-
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Preencher os campos com uma entrada de SQL injection.
-5. Clicar em Continue.
-
-**Resultado esperado:**  
-Sistema permite continuar para a página `checkout-step-two.html`.
-
-### CT-33: Checkout com script HTML
-**Descrição:** Validar se entrada com script HTML é tratada como texto comum no formulário.
-
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Preencher os campos com tags HTML/script.
-5. Clicar em Continue.
-
-**Resultado esperado:**  
-Sistema permite continuar para a página `checkout-step-two.html`.
-
-### CT-34: Checkout com emojis
-**Descrição:** Validar comportamento do checkout quando os campos recebem emojis.
-
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Preencher os campos com emojis.
-5. Clicar em Continue.
-
-**Resultado esperado:**  
-Sistema permite continuar para a página `checkout-step-two.html`.
-
-### CT-35: Checkout com quebra de linha
-**Descrição:** Validar comportamento do checkout quando os campos recebem quebra de linha.
-
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Preencher os campos com quebra de linha.
-5. Clicar em Continue.
-
-**Resultado esperado:**  
-Sistema permite continuar para a página `checkout-step-two.html`.
-
-### CT-36: Checkout com CEP com letras e números
-**Descrição:** Documentar possível bug onde o sistema aceita CEP com letras e números.
-
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Preencher First Name e Last Name.
-5. Preencher Zip/Postal Code com letras e números.
-6. Clicar em Continue.
-
-**Resultado esperado:**  
-Sistema deveria exibir mensagem de erro, mas atualmente permite continuar.
-
-### CT-37: Checkout com CEP inválido
-**Descrição:** Documentar possível bug onde o sistema aceita CEP inválido.
-
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Preencher First Name e Last Name.
-5. Preencher Zip/Postal Code com CEP inválido.
-6. Clicar em Continue.
-
-**Resultado esperado:**  
-Sistema deveria exibir mensagem de erro, mas atualmente permite continuar.
-
-### CT-38: Checkout com todos os campos preenchidos apenas com espaços
-**Descrição:** Documentar possível bug onde o sistema aceita campos preenchidos somente com espaços.
-
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Preencher First Name, Last Name e Zip/Postal Code apenas com espaços.
-5. Clicar em Continue.
-
-**Resultado esperado:**  
-Sistema deveria exibir mensagem de erro, mas atualmente permite continuar.
-
-### CT-39: Validar cálculo do resumo da compra
-**Descrição:** Validar se o total do overview corresponde à soma do subtotal com a taxa.
-
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Preencher o formulário.
+4. Preencher dados validos.
 5. Capturar subtotal, taxa e total.
-6. Somar subtotal + taxa.
+6. Comparar subtotal + taxa com o total.
 
-**Resultado esperado:**  
-O valor calculado deve ser igual ao total exibido na tela.
+**Resultado esperado:** A soma de subtotal + taxa e igual ao total exibido.
 
-### CT-40: Finalizar compra
-**Descrição:** Validar se o botão Finish conclui a compra.
+### CT-25: Validar total da compra com Sauce Labs Bike Light
 
-**Passos:**
-1. Fazer login.
-2. Adicionar produtos ao carrinho.
-3. Acessar checkout.
-4. Preencher o formulário.
-5. Clicar em Finish no overview.
+**Arquivo:** `tests/test_finish.py::test_soma_one_products[Sauce Labs Bike Light]`
 
-**Resultado esperado:**  
-Usuário é direcionado para a página `checkout-complete.html`.
-
-### CT-41: Cancelar compra no overview
-**Descrição:** Validar se o botão Cancel no overview retorna para a página de inventário.
+**Descricao:** Validar o calculo do total no checkout overview para Sauce Labs Bike Light.
 
 **Passos:**
 1. Fazer login.
-2. Adicionar produtos ao carrinho.
+2. Adicionar Sauce Labs Bike Light ao carrinho.
 3. Acessar checkout.
-4. Preencher o formulário.
-5. Clicar em Cancel no overview.
+4. Preencher dados validos.
+5. Capturar subtotal, taxa e total.
+6. Comparar subtotal + taxa com o total.
 
-**Resultado esperado:**  
-Usuário retorna para a página de inventário.
+**Resultado esperado:** A soma de subtotal + taxa e igual ao total exibido.
 
-**Total documentado:** 41 casos de teste, equivalentes aos 41 testes automatizados listados pelo Playwright.
+### CT-26: Validar total da compra com Sauce Labs Bolt T-Shirt
+
+**Arquivo:** `tests/test_finish.py::test_soma_one_products[Sauce Labs Bolt T-Shirt]`
+
+**Descricao:** Validar o calculo do total no checkout overview para Sauce Labs Bolt T-Shirt.
+
+**Passos:**
+1. Fazer login.
+2. Adicionar Sauce Labs Bolt T-Shirt ao carrinho.
+3. Acessar checkout.
+4. Preencher dados validos.
+5. Capturar subtotal, taxa e total.
+6. Comparar subtotal + taxa com o total.
+
+**Resultado esperado:** A soma de subtotal + taxa e igual ao total exibido.
+
+### CT-27: Validar total da compra com Sauce Labs Fleece Jacket
+
+**Arquivo:** `tests/test_finish.py::test_soma_one_products[Sauce Labs Fleece Jacket]`
+
+**Descricao:** Validar o calculo do total no checkout overview para Sauce Labs Fleece Jacket.
+
+**Passos:**
+1. Fazer login.
+2. Adicionar Sauce Labs Fleece Jacket ao carrinho.
+3. Acessar checkout.
+4. Preencher dados validos.
+5. Capturar subtotal, taxa e total.
+6. Comparar subtotal + taxa com o total.
+
+**Resultado esperado:** A soma de subtotal + taxa e igual ao total exibido.
+
+### CT-28: Validar total da compra com Sauce Labs Onesie
+
+**Arquivo:** `tests/test_finish.py::test_soma_one_products[Sauce Labs Onesie]`
+
+**Descricao:** Validar o calculo do total no checkout overview para Sauce Labs Onesie.
+
+**Passos:**
+1. Fazer login.
+2. Adicionar Sauce Labs Onesie ao carrinho.
+3. Acessar checkout.
+4. Preencher dados validos.
+5. Capturar subtotal, taxa e total.
+6. Comparar subtotal + taxa com o total.
+
+**Resultado esperado:** A soma de subtotal + taxa e igual ao total exibido.
+
+### CT-29: Validar total da compra com Test.allTheThings() T-Shirt (Red)
+
+**Arquivo:** `tests/test_finish.py::test_soma_one_products[Test.allTheThings() T-Shirt (Red)]`
+
+**Descricao:** Validar o calculo do total no checkout overview para Test.allTheThings() T-Shirt (Red).
+
+**Passos:**
+1. Fazer login.
+2. Adicionar Test.allTheThings() T-Shirt (Red) ao carrinho.
+3. Acessar checkout.
+4. Preencher dados validos.
+5. Capturar subtotal, taxa e total.
+6. Comparar subtotal + taxa com o total.
+
+**Resultado esperado:** A soma de subtotal + taxa e igual ao total exibido.
+
+### CT-30: Validar total da compra com todos os produtos
+
+**Arquivo:** `tests/test_finish.py::test_finish_all`
+
+**Descricao:** Validar o calculo do total no checkout overview com todos os produtos.
+
+**Passos:**
+1. Fazer login.
+2. Adicionar todos os produtos ao carrinho.
+3. Acessar checkout.
+4. Preencher dados validos.
+5. Capturar subtotal, taxa e total.
+6. Comparar subtotal + taxa com o total.
+
+**Resultado esperado:** A soma de subtotal + taxa e igual ao total exibido.
+
+### CT-31: Login valido
+
+**Arquivo:** `tests/test_login.py::test_login_valid`
+
+**Descricao:** Validar login com credenciais corretas.
+
+**Passos:**
+1. Acessar a pagina de login.
+2. Inserir usuario `standard_user`.
+3. Inserir senha `secret_sauce`.
+4. Clicar em Login.
+
+**Resultado esperado:** Usuario e direcionado para `inventory.html`.
+
+### CT-32: Login invalido com usuario errado
+
+**Arquivo:** `tests/test_login.py::test_login_error[errado-secret_sauce-Epic sadface: Username and password do not match any user in this service]`
+
+**Descricao:** Validar mensagem de erro ao informar usuario invalido.
+
+**Passos:**
+1. Acessar a pagina de login.
+2. Inserir usuario invalido.
+3. Inserir senha valida.
+4. Clicar em Login.
+
+**Resultado esperado:** Sistema exibe `Epic sadface: Username and password do not match any user in this service`.
+
+### CT-33: Login invalido com senha errada
+
+**Arquivo:** `tests/test_login.py::test_login_error[standard_user-errado-Epic sadface: Username and password do not match any user in this service]`
+
+**Descricao:** Validar mensagem de erro ao informar senha invalida.
+
+**Passos:**
+1. Acessar a pagina de login.
+2. Inserir usuario valido.
+3. Inserir senha invalida.
+4. Clicar em Login.
+
+**Resultado esperado:** Sistema exibe `Epic sadface: Username and password do not match any user in this service`.
+
+### CT-34: Login com usuario e senha vazios
+
+**Arquivo:** `tests/test_login.py::test_login_error[--Epic sadface: Username is required]`
+
+**Descricao:** Validar obrigatoriedade do campo usuario.
+
+**Passos:**
+1. Acessar a pagina de login.
+2. Deixar usuario vazio.
+3. Deixar senha vazia.
+4. Clicar em Login.
+
+**Resultado esperado:** Sistema exibe `Epic sadface: Username is required`.
+
+### CT-35: Login com senha vazia
+
+**Arquivo:** `tests/test_login.py::test_login_error[standard_user--Epic sadface: Password is required]`
+
+**Descricao:** Validar obrigatoriedade do campo senha.
+
+**Passos:**
+1. Acessar a pagina de login.
+2. Inserir usuario valido.
+3. Deixar senha vazia.
+4. Clicar em Login.
+
+**Resultado esperado:** Sistema exibe `Epic sadface: Password is required`.
+
+### CT-36: Login com usuario vazio
+
+**Arquivo:** `tests/test_login.py::test_login_error[-secret_sauce-Epic sadface: Username is required]`
+
+**Descricao:** Validar obrigatoriedade do campo usuario quando a senha foi preenchida.
+
+**Passos:**
+1. Acessar a pagina de login.
+2. Deixar usuario vazio.
+3. Inserir senha valida.
+4. Clicar em Login.
+
+**Resultado esperado:** Sistema exibe `Epic sadface: Username is required`.
+
+### CT-37: Adicionar Sauce Labs Backpack ao carrinho pela pagina de produtos
+
+**Arquivo:** `tests/test_products.py::test_add_one_product[Sauce Labs Backpack]`
+
+**Descricao:** Validar a adicao de Sauce Labs Backpack ao carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Clicar no nome Sauce Labs Backpack.
+3. Clicar em Add to Cart na pagina de detalhe.
+4. Voltar para a pagina de produtos.
+5. Verificar o contador do carrinho.
+
+**Resultado esperado:** O contador do carrinho exibe `1`.
+
+### CT-38: Adicionar Sauce Labs Bike Light ao carrinho pela pagina de produtos
+
+**Arquivo:** `tests/test_products.py::test_add_one_product[Sauce Labs Bike Light]`
+
+**Descricao:** Validar a adicao de Sauce Labs Bike Light ao carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Clicar no nome Sauce Labs Bike Light.
+3. Clicar em Add to Cart na pagina de detalhe.
+4. Voltar para a pagina de produtos.
+5. Verificar o contador do carrinho.
+
+**Resultado esperado:** O contador do carrinho exibe `1`.
+
+### CT-39: Adicionar Sauce Labs Bolt T-Shirt ao carrinho pela pagina de produtos
+
+**Arquivo:** `tests/test_products.py::test_add_one_product[Sauce Labs Bolt T-Shirt]`
+
+**Descricao:** Validar a adicao de Sauce Labs Bolt T-Shirt ao carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Clicar no nome Sauce Labs Bolt T-Shirt.
+3. Clicar em Add to Cart na pagina de detalhe.
+4. Voltar para a pagina de produtos.
+5. Verificar o contador do carrinho.
+
+**Resultado esperado:** O contador do carrinho exibe `1`.
+
+### CT-40: Adicionar Sauce Labs Fleece Jacket ao carrinho pela pagina de produtos
+
+**Arquivo:** `tests/test_products.py::test_add_one_product[Sauce Labs Fleece Jacket]`
+
+**Descricao:** Validar a adicao de Sauce Labs Fleece Jacket ao carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Clicar no nome Sauce Labs Fleece Jacket.
+3. Clicar em Add to Cart na pagina de detalhe.
+4. Voltar para a pagina de produtos.
+5. Verificar o contador do carrinho.
+
+**Resultado esperado:** O contador do carrinho exibe `1`.
+
+### CT-41: Adicionar Sauce Labs Onesie ao carrinho pela pagina de produtos
+
+**Arquivo:** `tests/test_products.py::test_add_one_product[Sauce Labs Onesie]`
+
+**Descricao:** Validar a adicao de Sauce Labs Onesie ao carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Clicar no nome Sauce Labs Onesie.
+3. Clicar em Add to Cart na pagina de detalhe.
+4. Voltar para a pagina de produtos.
+5. Verificar o contador do carrinho.
+
+**Resultado esperado:** O contador do carrinho exibe `1`.
+
+### CT-42: Adicionar Test.allTheThings() T-Shirt (Red) ao carrinho pela pagina de produtos
+
+**Arquivo:** `tests/test_products.py::test_add_one_product[Test.allTheThings() T-Shirt (Red)]`
+
+**Descricao:** Validar a adicao de Test.allTheThings() T-Shirt (Red) ao carrinho.
+
+**Passos:**
+1. Fazer login.
+2. Clicar no nome Test.allTheThings() T-Shirt (Red).
+3. Clicar em Add to Cart na pagina de detalhe.
+4. Voltar para a pagina de produtos.
+5. Verificar o contador do carrinho.
+
+**Resultado esperado:** O contador do carrinho exibe `1`.
+
+### CT-43: Adicionar todos os produtos ao carrinho pela pagina de produtos
+
+**Arquivo:** `tests/test_products.py::test_add_list`
+
+**Descricao:** Validar a adicao de todos os produtos disponiveis.
+
+**Passos:**
+1. Fazer login.
+2. Clicar no nome de cada produto.
+3. Clicar em Add to Cart na pagina de detalhe.
+4. Voltar para a listagem.
+5. Repetir o fluxo para todos os produtos.
+6. Verificar o contador do carrinho.
+
+**Resultado esperado:** O contador do carrinho exibe `6`.
+
+## Observacoes
+
+- O README documenta o projeto atual em Selenium, Python e Pytest.
+- Os 43 casos acima seguem a mesma ordem exibida por `python -m pytest --collect-only -q`.
+- Atualmente nao ha testes automatizados para filtros de produtos, usuario
+  bloqueado, SQL injection, emojis, texto longo ou caracteres especiais no
+  checkout.
